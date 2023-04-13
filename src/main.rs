@@ -9,7 +9,7 @@ fn main() {
 
     let price: Result<String, ureq::Error> = get_price(&buffer);
     match price {
-        Ok(price) => println!("Price: {}", price),
+        Ok(price) => println!("Price: ${}", price),
         Err(error) => println!("Error: {}", error)
     }
 }
@@ -18,9 +18,14 @@ fn main() {
 // &String is a reference to a String
 fn get_price(cryptocurrency: &str) -> Result<String, ureq::Error> {
     println!("Cryptocurrency: {}", cryptocurrency);
+
     let url: String = format!("https://api.coingecko.com/api/v3/simple/price?ids={}&vs_currencies=usd", cryptocurrency);
     let body: String = ureq::get(&url)
         .call()?
         .into_string()?;
-    Ok(body)
+
+    let data: serde_json::Value = serde_json::from_str(&body).unwrap();
+    println!("Data: {}", data);
+
+    Ok(data["bitcoin"]["usd"].to_string())
 }
