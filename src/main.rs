@@ -1,8 +1,9 @@
 fn main() {
     let mut buffer: String = String::new();
 
+    println!("Enter a cryptocurrency: ");
     // Con el expect evitamos el match de _result
-    std::io::stdin()
+    let _ = std::io::stdin()
         .read_line(&mut buffer)
         .expect("Failed to read line");
 
